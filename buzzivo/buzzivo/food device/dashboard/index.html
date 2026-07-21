@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buzzivo - Pager Control Dashboard</title>
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Admin Panel -->
+        <aside class="sidebar glass-panel">
+            <div class="brand">
+                <i class="fa-solid fa-bell-concierge"></i>
+                <h1>Buzz<span>ivo</span></h1>
+            </div>
+
+            <div class="control-section">
+                <h2><i class="fa-solid fa-circle-plus"></i> Manage Pagers</h2>
+                <form id="add-device-form" class="form-group">
+                    <div class="input-wrapper">
+                        <input type="text" id="new-device-id" placeholder="Pager ID (e.g. 05, 101)" required autocomplete="off">
+                        <i class="fa-solid fa-pager"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Pager</button>
+                </form>
+            </div>
+
+            <div class="control-section">
+                <h2><i class="fa-solid fa-receipt"></i> Assign Pager</h2>
+                <form id="assign-order-form" class="form-group">
+                    <div class="input-wrapper">
+                        <select id="assign-device-id" required>
+                            <option value="" disabled selected>Select Available Pager</option>
+                        </select>
+                        <i class="fa-solid fa-pager"></i>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="order-bill-no" placeholder="Token / Bill Number" required autocomplete="off">
+                        <i class="fa-solid fa-hashtag"></i>
+                    </div>
+                    <div class="input-wrapper text-area-wrapper">
+                        <textarea id="order-items" placeholder="Items (e.g., 2 Burger, 1 Fries)" rows="2" required></textarea>
+                        <i class="fa-solid fa-burger" style="top: 18px;"></i>
+                    </div>
+
+                    <div class="timer-input-group">
+                        <i class="fa-regular fa-clock"></i>
+                        <input type="number" id="order-timer" placeholder="Est. Time (mins)" min="1" max="120" required>
+                    </div>
+
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="order-type" value="Dine-in" checked>
+                            <span class="radio-btn">Dine-in</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="order-type" value="Takeaway">
+                            <span class="radio-btn">Takeaway</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Queue & Set Timer</button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Area -->
+        <main class="dashboard-area">
+
+            <!-- Statistics Banner -->
+            <div class="stats-banner glass-panel">
+                <div class="stat-card">
+                    <div class="stat-icon text-green"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info">
+                        <h3>Pagers Ready</h3>
+                        <p id="stat-available">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-orange"><i class="fa-solid fa-fire-burner"></i></div>
+                    <div class="stat-info">
+                        <h3>In Kitchen</h3>
+                        <p id="stat-active">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon text-red"><i class="fa-solid fa-bell-ringing"></i></div>
+                    <div class="stat-info">
+                        <h3>Ready / Call</h3>
+                        <p id="stat-ready">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Devices Section -->
+            <section class="dashboard-section glass-panel">
+                <header class="section-header">
+                    <h2>Available Pagers</h2>
+                    <span class="badge badge-green">Ready to assign</span>
+                </header>
+                <div id="available-devices-container" class="devices-grid empty-state">
+                    <div class="empty-message">No pagers available. Add some from the sidebar!</div>
+                </div>
+            </section>
+
+            <!-- Active Orders Section -->
+            <section class="dashboard-section glass-panel active-orders-section">
+                <header class="section-header">
+                    <h2>Kitchen Tickets</h2>
+                    <span class="badge badge-blue">In progress</span>
+                </header>
+                <div id="active-orders-container" class="orders-grid empty-state">
+                    <div class="empty-message">No active tickets right now.</div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals for interactive tasks (Update Timer, etc) -->
+    <div id="update-timer-modal" class="modal-backdrop hidden">
+        <div class="modal glass-panel">
+            <h3>Update Timer for Pager <span id="modal-device-name" class="text-accent"></span></h3>
+            <p>Add or set a new estimated completion time.</p>
+            <form id="update-timer-form">
+                <input type="hidden" id="modal-device-id">
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary quick-add" data-add="5">+5 Min</button>
+                    <button type="button" class="btn btn-secondary quick-add" data-add="10">+10 Min</button>
+                    <button type="button" class="btn btn-secondary quick-add" data-add="15">+15 Min</button>
+                </div>
+                <div class="form-group custom-time-group">
+                    <input type="number" id="modal-new-time" placeholder="Or set exact minutes" min="1">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+            <button id="close-modal-btn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

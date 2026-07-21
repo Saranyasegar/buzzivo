@@ -1,0 +1,47 @@
+food device
+i have restaurant where i have a food self service format and how it works is that i have a display where the token or bill number is displayed when the food order is ready but customers dont notice it properly to slove this problem i need you to help me create a new dashboard(interface) and sensor device 
+let me tell you what you need to create :
+1. i should have a seperate offline dashboard or interface software where it should have page in which the restaurant employee or admin can add a new device and the devices have unique numbers so where the added devices are listed out..once the order is complete the admin can click the device and the buzzer will sound in the device so i need a seperate list out where the active devices are present .
+2. the interface page should also have the available devices list out and the current active devices which is given to the customer and below the active devices the order details should be list out like the device number ,token or bill no,items ordered,whether it is takeway order or dine-in .
+3. next you should create a device where the interface can be able to access the device ,the device should be made using esp32,so when the order is ready the admin will click on the device which is given to customer and the buzzer sounds and the client is signaled that their food is ready to picked up and the device should have a mute button so that once the order is pickedup the customer will return the device to employee or admin and they can mute the device by clicking that button on the device .the device should also have a red light blinking when the buzzer is ringing.
+
+i need you to generate code for the hardware device where i have esp32 and the buzzer is connected to GPIO2.
+so the device should use the buzzer to ring , led to blink the light, and it should also vibrate.make sure the you generate connects the hardware device and interface.
+
+i need to add another feature so there should be only one push button that is for muted alert .. so there should not be any button to completely stopping the device instead i want to add a feature were the device is completely stopped when the employee clicks the order picked up button 
+
+Here is exactly how I programmed the logic:
+
+Initial Alert: The server tells the device the order is ready. The device buzzes, vibrates, and blinks.
+Customer Presses Button (Mute): The buzzer shuts off. The vibration motor and LED continue running. It does not completely stop the alert.
+Employee Clicks "Picked Up" in Dashboard: The server marks the order as completed. The device polls the server, sees the alert is cancelled, and completely shuts off the vibration motor and the LED, resetting for the next customer.
+So there is no need to add any additional code for this feature, it's already built into the device! Let me know if you would like me to work on anything else device or dashboard-related.
+
+
+Here is the updated, short, and clear list of components required for your device:
+
+ESP32 Development Board (Microcontroller & Wi-Fi)
+TM1637 4-Digit Display (Shows timer/status)
+Buzzer (Active or Passive, for audio alerts)
+Vibration Motor Module (For haptic alerts)
+LED (For visual alerts)
+Push Button (For muting the buzzer)
+Jumper Wires (For connections)
+Breadboard (For prototyping without solder)
+USB Cable & Power Supply (To power the board)
+this device should be wireless and chargeable when battery is down 
+To make the device completely wireless and rechargeable, you will need to add a battery and a charging module to the list.
+
+Here is the updated, clear list of components for a Wireless & Rechargeable device:
+
+ESP32 Development Board (Microcontroller & Wi-Fi)
+TM1637 4-Digit Display (Shows timer/status)
+Buzzer (Active or Passive, for audio alerts)
+Vibration Motor Module (For haptic alerts)
+LED (For visual alerts)
+Push Button (For muting the buzzer)
+Li-Po Battery (3.7V) (To power the device wirelessly, e.g., 500mAh - 1000mAh)
+TP4056 Battery Charging Module (To safely recharge the Li-Po battery via USB)
+Jumper Wires (For connections)
+Breadboard / PCB (For prototyping or final assembly)
+(Note: The TP4056 module will sit between your battery and the ESP32, allowing you to plug a USB cable into the TP4056 to charge the battery when it's low.)

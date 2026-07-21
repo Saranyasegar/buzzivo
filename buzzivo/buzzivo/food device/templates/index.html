@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buzzivo - Chef Command Station</title>
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Warm Espresso / Honey Orange Theme */
+            --bg-color: #0f0d0c;
+            --card-bg: #1c1614;
+            --primary: #ff9f0a;
+            --primary-hover: #ffb340;
+            --primary-glow: rgba(255, 159, 10, 0.4);
+            --text-main: #f5f5f7;
+            --text-light: #a1a1a6;
+            --input-bg: #25201d;
+            --input-border: #3a322e;
+            --shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 159, 10, 0.03);
+            --success: #30d158;
+            --success-hover: #54d674;
+            --danger: #ff453a;
+            --danger-hover: #ff6961;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--input-border) 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Layout */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-outline {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .btn-logout {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-logout:hover {
+            background-color: var(--danger);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 69, 58, 0.4);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid var(--input-border);
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 159, 10, 0.2);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-bottom: 2px dashed var(--input-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 i {
+            color: var(--primary);
+        }
+
+        /* Form Elements */
+        label {
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 12px 12px 42px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            background: var(--input-bg);
+            font-size: 1rem;
+            color: #fff;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(37, 32, 29, 0.8);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        input:focus + i, select:focus + i {
+            color: var(--primary);
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--bg-color);
+            font-size: 1rem;
+            transition: all 0.3s;
+            width: 100%;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--bg-color);
+            box-shadow: 0 4px 12px rgba(255, 159, 10, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 6px 16px rgba(255, 159, 10, 0.4);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--bg-color);
+            box-shadow: 0 4px 12px rgba(48, 209, 88, 0.2);
+        }
+
+        .btn-success:hover {
+            background-color: var(--success-hover);
+            box-shadow: 0 6px 16px rgba(48, 209, 88, 0.4);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: #fff;
+            width: auto;
+            box-shadow: 0 4px 12px rgba(255, 69, 58, 0.2);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+            box-shadow: 0 6px 16px rgba(255, 69, 58, 0.4);
+        }
+
+        /* Order Cards styled like Kitchen Tickets */
+        .order-card {
+            background: var(--card-bg);
+            border: 1px solid var(--input-border);
+            padding: 20px 20px 25px 20px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        /* Tear-off perforated look at the bottom of order tickets */
+        .order-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-image: linear-gradient(to right, var(--bg-color) 6px, transparent 6px);
+            background-size: 12px 6px;
+        }
+
+        .order-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--primary);
+        }
+
+        .order-card.ready::before {
+            background: var(--danger);
+            animation: pulseBar 1s infinite alternate;
+        }
+
+        @keyframes pulseBar {
+            from { opacity: 1; }
+            to { opacity: 0.4; }
+        }
+
+        .order-card.ready {
+            border-color: rgba(255, 69, 58, 0.3);
+            background-color: rgba(255, 69, 58, 0.03);
+        }
+
+        .token-num {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            font-family: 'Orbitron', sans-serif;
+            margin: 5px 0;
+        }
+
+        .badge {
+            background: rgba(255, 159, 10, 0.1);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            border: 1px solid rgba(255, 159, 10, 0.2);
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+
+        /* Coaster Pager Styling */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 20px;
+        }
+
+        .device-box {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #251f1c;
+            border: 3px solid var(--input-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
+            user-select: none;
+        }
+
+        .device-box:hover {
+            transform: scale(1.05) translateY(-2px);
+        }
+
+        .pager-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .pager-status {
+            font-size: 0.65rem;
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .device-box .remove-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 69, 58, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 69, 58, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s, background 0.2s, color 0.2s;
+            z-index: 10;
+        }
+
+        .device-box:hover .remove-btn {
+            opacity: 1;
+        }
+
+        .device-box:hover .remove-btn:hover {
+            background: var(--danger);
+            color: #fff;
+            border-color: var(--danger);
+        }
+
+        /* Available Coasters */
+        .device-box.available {
+            border-color: var(--success);
+            color: var(--success);
+            box-shadow: 0 8px 16px rgba(48, 209, 88, 0.15), inset 0 0 10px rgba(48, 209, 88, 0.2);
+        }
+
+        .device-box.available::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 50%;
+            border: 2px dashed rgba(48, 209, 88, 0.4);
+            animation: rotatePager 20s linear infinite;
+        }
+
+        /* Preparing Coasters */
+        .device-box.active.preparing {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 8px 16px rgba(255, 159, 10, 0.15), inset 0 0 10px rgba(255, 159, 10, 0.2);
+        }
+
+        .device-box.active.preparing::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 159, 10, 0.4);
+            animation: rotatePager 12s linear infinite;
+        }
+
+        /* Alerting / Paging Coasters (Shaking/rippling) */
+        .device-box.active.ready {
+            border-color: var(--danger);
+            color: var(--danger);
+            animation: vibratePager 0.15s linear infinite, ringRipples 1.2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+        }
+
+        .device-box.active.ready::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 50%;
+            border: 3px dashed rgba(255, 69, 58, 0.8);
+            animation: rotatePager 3s linear infinite;
+        }
+
+        @keyframes rotatePager {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes vibratePager {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-2px, -1px) rotate(-1deg); }
+            20% { transform: translate(-1px, 1px) rotate(1deg); }
+            30% { transform: translate(1px, 2px) rotate(0deg); }
+            40% { transform: translate(2px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, -2px) rotate(-1deg); }
+            60% { transform: translate(-2px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -1px) rotate(1deg); }
+        }
+
+        @keyframes ringRipples {
+            0% { box-shadow: 0 0 0 0 rgba(255, 69, 58, 0.5), 0 0 0 0 rgba(255, 69, 58, 0.3); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 69, 58, 0), 0 0 0 30px rgba(255, 69, 58, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 69, 58, 0), 0 0 0 0 rgba(255, 69, 58, 0); }
+        }
+
+        #status {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: var(--card-bg);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--input-border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: pulseGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🍳 Buzz<span>ivo</span></h1>
+            <div class="header-actions">
+                <a href="/logout" class="btn-outline btn-logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Log Out</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- LEFT COLUMN: Actions -->
+            <div>
+                <!-- New Order Form -->
+                <div class="card">
+                    <h2><i class="fa-solid fa-receipt"></i> New Order</h2>
+                    <form id="orderForm">
+                        <label>Token / Bill Number</label>
+                        <div class="input-group">
+                            <input type="text" id="tokenNo" placeholder="e.g. A-123" required>
+                            <i class="fa-solid fa-hashtag"></i>
+                        </div>
+
+                        <label>Items</label>
+                        <div class="input-group">
+                            <input type="text" id="items" placeholder="e.g. Burger, Fries" required>
+                            <i class="fa-solid fa-burger"></i>
+                        </div>
+
+                        <label>Order Type</label>
+                        <div class="input-group">
+                            <select id="orderType">
+                                <option value="Dine-in">🥡 Dine-in</option>
+                                <option value="Takeaway">📦 Takeaway</option>
+                            </select>
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+
+                        <label>Assign Pager</label>
+                        <div class="input-group">
+                            <select id="deviceSelect" required>
+                                <option value="">Select a Pager...</option>
+                            </select>
+                            <i class="fa-solid fa-pager"></i>
+                        </div>
+
+                        <button type="submit" class="btn-primary">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Create & Queue Order</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Add Device -->
+                <div class="card">
+                    <h2><i class="fa-solid fa-circle-plus"></i> Add Pager</h2>
+                    <form id="deviceForm">
+                        <label>Pager Number</label>
+                        <div class="input-group">
+                            <input type="text" id="newDeviceNo" placeholder="e.g. 101" required>
+                            <i class="fa-solid fa-pager"></i>
+                        </div>
+                        <button type="submit" class="btn-success">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Add Pager to Pool</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Lists -->
+            <div>
+                <!-- Active Orders -->
+                <div class="card">
+                    <h2><i class="fa-solid fa-fire-burner"></i> Kitchen Tickets</h2>
+                    <div id="ordersList">
+                        <!-- Orders will be injected here -->
+                        <p style="color:var(--text-light); text-align:center;">No active orders right now.</p>
+                    </div>
+                </div>
+
+                <!-- All Devices Status -->
+                <div class="card">
+                    <h2><i class="fa-solid fa-table-cells"></i> Pagers Board</h2>
+                    <div class="device-grid" id="devicesList">
+                        <!-- Devices grid -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="status">
+        <div class="pulse-dot"></div>
+        <span>Connecting...</span>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+
+        // --- Pager Logic ---
+        let devices = [];
+        let orders = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshData();
+            setInterval(refreshData, 3000);
+        });
+
+        async function refreshData() {
+            try {
+                await Promise.all([fetchDevices(), fetchOrders()]);
+                renderDevices();
+                renderOrders();
+                renderDeviceSelect();
+                document.getElementById('status').innerHTML = '<div class="pulse-dot"></div><span>Synced: ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) + '</span>';
+            } catch (error) {
+                console.error('Error polling:', error);
+                document.getElementById('status').innerHTML = '<div class="pulse-dot" style="background-color:var(--danger); box-shadow:0 0 8px var(--danger);"></div><span>Offline</span>';
+            }
+        }
+
+        async function fetchDevices() {
+            const res = await fetch(`${API_URL}/devices`);
+            if (res.ok) devices = await res.json();
+        }
+
+        async function fetchOrders() {
+            const res = await fetch(`${API_URL}/orders`);
+            if (res.ok) orders = await res.json();
+        }
+
+        function renderDeviceSelect() {
+            const select = document.getElementById('deviceSelect');
+            const currentSelection = select.value;
+            const available = devices.filter(d => !d.is_active);
+
+            select.innerHTML = '<option value="">Select a Pager...</option>';
+
+            available.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.number;
+                opt.innerText = `Pager ${d.number}`;
+                select.appendChild(opt);
+            });
+
+            if (currentSelection && available.find(d => d.number === currentSelection)) {
+                select.value = currentSelection;
+            }
+        }
+
+        function renderDevices() {
+            const container = document.getElementById('devicesList');
+            container.innerHTML = '';
+            if (devices.length === 0) {
+                container.innerHTML = '<p style="grid-column: span 3; color:var(--text-light); text-align:center;">No pagers added yet.</p>';
+                return;
+            }
+            devices.forEach(d => {
+                const div = document.createElement('div');
+                
+                // Determine if device is ready/paging
+                const isReady = orders.some(o => o.device_number === d.number && o.status === 'ready');
+                div.className = `device-box ${d.is_active ? (isReady ? 'active ready' : 'active preparing') : 'available'}`;
+
+                let innerHtml = `
+                    <div class="pager-number">${d.number}</div>
+                    <div class="pager-status">${d.is_active ? (isReady ? 'ALERT' : 'PREP') : 'FREE'}</div>
+                `;
+                
+                if (!d.is_active) {
+                    innerHtml += `
+                        <button class="remove-btn" onclick="removeDevice('${d.number}')" title="Remove Pager"><i class="fa-solid fa-xmark"></i></button>
+                    `;
+                }
+
+                div.innerHTML = innerHtml;
+                div.title = d.is_active ? (isReady ? 'Order Ready - Paging!' : 'Food in preparation') : 'Available - Ready to assign';
+                container.appendChild(div);
+            });
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersList');
+            container.innerHTML = '';
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-light); text-align:center; padding:20px;">Kitchen is clear! 👨‍🍳</p>';
+                return;
+            }
+
+            orders.forEach(o => {
+                const el = document.createElement('div');
+                el.className = `order-card ${o.status}`;
+
+                // Text Details
+                const details = `
+                <div>
+                    <div><strong>Pager ${o.device_number}</strong> <span class="badge">${o.order_type === 'Dine-in' ? '🍽️ Dine-in' : '🥡 Takeaway'}</span></div>
+                    <div class="token-num">#${o.token_no}</div>
+                    <div style="color: var(--text-light); font-size:0.95em; font-weight: 500;">${o.items}</div>
+                </div>
+            `;
+
+                // Actions
+                let actions = '';
+                if (o.status === 'preparing') {
+                    let timerControl = '';
+                    if (o.has_timer) {
+                        const mins = Math.floor(o.remaining_seconds / 60);
+                        const secs = o.remaining_seconds % 60;
+                        const timeString = `${mins}:${secs.toString().padStart(2, '0')}`;
+                        timerControl = `
+                            <div style="margin-top:10px; font-size:0.9em; display:flex; align-items:center; gap:5px; flex-wrap:wrap; justify-content:flex-end;">
+                                ⏱️ <span style="font-family:'Orbitron', monospace; font-weight:700; font-size:1.15em; color:var(--primary); margin-right:8px;">${timeString}</span>
+                                <input type="number" id="update-timer-${o.device_number}" style="width:65px; padding:6px; margin:0;" placeholder="+Min">
+                                <button onclick="updateTimerManual('${o.device_number}')" style="padding:6px 10px; font-size:0.8em; width:auto;" class="btn-outline">Add</button>
+                            </div>
+                        `;
+                    } else {
+                        timerControl = `
+                            <div style="margin-top:10px; font-size:0.9em; display:flex; align-items:center; gap:5px; justify-content:flex-end;">
+                                <input type="number" id="timer-${o.device_number}" style="width:65px; padding:6px; margin:0;" placeholder="Min">
+                                <button onclick="setTimer('${o.device_number}')" style="padding:6px 10px; font-size:0.8em; width:auto;" class="btn-primary">Set Timer</button>
+                            </div>
+                        `;
+                    }
+
+                    actions = `
+                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
+                            <button onclick="notifyCustomer(${o.id})" class="btn-danger"><i class="fa-solid fa-bell"></i> Call Pager</button>
+                            ${timerControl}
+                        </div>
+                    `;
+                } else if (o.status === 'ready') {
+                    actions = `
+                    <div style="text-align: right; display:flex; flex-direction:column; gap:5px; align-items:flex-end;">
+                        <div style="color: var(--danger); font-weight: 800; font-size:0.9em; letter-spacing:1px; animation: pulseGlow 0.5s infinite alternate;"><i class="fa-solid fa-wave-square"></i> PAGING...</div>
+                        <button onclick="completeOrder(${o.id})" class="btn-success"><i class="fa-solid fa-circle-check"></i> Picked Up</button>
+                    </div>
+                `;
+                }
+
+                el.innerHTML = details + actions;
+                container.appendChild(el);
+            });
+        }
+
+        // --- Actions ---
+        window.removeDevice = async (number) => {
+            if (!confirm(`Are you sure you want to remove Pager ${number}?`)) return;
+            const res = await fetch(`${API_URL}/devices/${number}`, { method: 'DELETE' });
+            if (res.ok) {
+                refreshData();
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Error removing pager');
+            }
+        };
+
+        document.getElementById('deviceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const number = document.getElementById('newDeviceNo').value;
+            const res = await fetch(`${API_URL}/devices`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ number })
+            });
+            if (res.ok) {
+                document.getElementById('newDeviceNo').value = '';
+                refreshData();
+            } else {
+                alert('Error adding pager');
+            }
+        });
+
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                token_no: document.getElementById('tokenNo').value,
+                items: document.getElementById('items').value,
+                order_type: document.getElementById('orderType').value,
+                device_number: document.getElementById('deviceSelect').value
+            };
+
+            const res = await fetch(`${API_URL}/orders`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                document.getElementById('tokenNo').value = '';
+                document.getElementById('items').value = '';
+                refreshData();
+            } else {
+                alert('Error creating order');
+            }
+        });
+
+        window.notifyCustomer = async (id) => {
+            await fetch(`${API_URL}/orders/${id}/call`, { method: 'POST' });
+            refreshData();
+        };
+
+        window.completeOrder = async (id) => {
+            await fetch(`${API_URL}/orders/${id}/complete`, { method: 'POST' });
+            refreshData();
+        };
+
+        window.setTimer = async (deviceNumber) => {
+            const input = document.getElementById(`timer-${deviceNumber}`);
+            if (!input || !input.value) return;
+            const minutes = parseInt(input.value);
+            if (isNaN(minutes) || minutes <= 0) return;
+
+            const res = await fetch(`${API_URL}/devices/${deviceNumber}/set_time`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ minutes })
+            });
+
+            if (res.ok) {
+                refreshData();
+            } else {
+                alert('Error setting timer');
+            }
+        };
+
+        window.updateTimer = async (deviceNumber, minutesToAdd) => {
+            const res = await fetch(`${API_URL}/devices/${deviceNumber}/add_time`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ minutes: minutesToAdd })
+            });
+
+            if (res.ok) {
+                refreshData();
+            } else {
+                alert('Error updating timer');
+            }
+        };
+
+        window.updateTimerManual = async (deviceNumber) => {
+            const input = document.getElementById(`update-timer-${deviceNumber}`);
+            if (!input || !input.value) return;
+            const minutesToAdd = parseInt(input.value);
+            if (isNaN(minutesToAdd) || minutesToAdd === 0) return;
+
+            const res = await fetch(`${API_URL}/devices/${deviceNumber}/add_time`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ minutes: minutesToAdd })
+            });
+
+            if (res.ok) {
+                refreshData();
+            } else {
+                alert('Error updating timer');
+            }
+        };
+
+    </script>
+
+</body>
+
+</html>
